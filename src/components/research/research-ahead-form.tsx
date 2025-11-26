@@ -16,8 +16,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { getRecommendationsAction } from '@/actions/get-recommendations';
-import { Loader2, Lightbulb } from 'lucide-react';
+import { Loader2, Lightbulb, ExternalLink } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import type { Paper } from '@/services/semantic-scholar';
+import { Separator } from '../ui/separator';
 
 const formSchema = z.object({
   projectHistory: z.string().min(1, "Please provide your project history."),
@@ -34,6 +36,7 @@ const defaultInterests = `Quantum computing, novel materials science, artificial
 export function ResearchAheadForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [recommendations, setRecommendations] = useState('');
+  const [papers, setPapers] = useState<Paper[]>([]);
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
@@ -47,9 +50,11 @@ export function ResearchAheadForm() {
   async function onSubmit(values: FormValues) {
     setIsLoading(true);
     setRecommendations('');
+    setPapers([]);
     const result = await getRecommendationsAction(values);
     if (result.recommendations) {
       setRecommendations(result.recommendations);
+      setPapers(result.papers || []);
     } else {
       toast({
         variant: "destructive",
@@ -111,7 +116,7 @@ export function ResearchAheadForm() {
         <CardHeader>
           <CardTitle className="font-headline">Research Recommendations</CardTitle>
           <CardDescription>
-            AI-powered suggestions for your next big project.
+            AI-powered suggestions and relevant papers from Semantic Scholar.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex-grow min-h-[400px]">
@@ -120,8 +125,27 @@ export function ResearchAheadForm() {
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
           ) : recommendations ? (
-            <div className="rounded-md border p-4 bg-muted/50 h-full max-h-[60vh] overflow-auto">
+            <div className="rounded-md border p-4 bg-muted/50 h-full max-h-[70vh] overflow-y-auto">
                <pre className="whitespace-pre-wrap text-sm font-body">{recommendations}</pre>
+                {papers.length > 0 && (
+                    <>
+                        <Separator className="my-4" />
+                        <h3 className="font-bold text-lg mb-2 font-headline">Suggested Papers</h3>
+                        <div className="space-y-4">
+                            {papers.map((paper) => (
+                                <div key={paper.paperId} className="p-3 border rounded-lg bg-background">
+                                    <a href={paper.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline flex items-center justify-between">
+                                        <span>{paper.title}</span>
+                                        <ExternalLink className="h-4 w-4 ml-2 flex-shrink-0"/>
+                                    </a>
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                        {paper.authors.map(a => a.name).join(', ')} ({paper.year})
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                )}
             </div>
           ) : (
             <div className="flex items-center justify-center h-full border-2 border-dashed rounded-lg">

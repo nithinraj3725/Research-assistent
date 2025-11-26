@@ -5,7 +5,7 @@ export default function ResearchAheadPage() {
         <div className="space-y-6">
             <div className="space-y-1">
                 <h1 className="text-3xl font-bold font-headline">Research Ahead</h1>
-                <p className="text-muted-foreground">Get personalized research recommendations and insights.</p>
+                <p className="text-muted-foreground">Get personalized research recommendations and paper suggestions from Semantic Scholar.</p>
             </div>
             <ResearchAheadForm />
         </div>
