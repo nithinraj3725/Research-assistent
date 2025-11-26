@@ -1,7 +1,7 @@
 'use server';
 
 import { ai } from '@/ai/genkit';
-import { searchPapers, type Paper } from '@/services/semantic-scholar';
+import { searchPapers, Paper } from '@/services/semantic-scholar';
 import { z } from 'genkit';
 
 export const searchPapersTool = ai.defineTool(
