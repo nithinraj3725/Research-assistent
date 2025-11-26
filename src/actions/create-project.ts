@@ -1,5 +1,8 @@
 'use server';
 
+// This file is no longer used for project creation as it has been moved to client-side state.
+// It is kept for potential future use with a database.
+
 import { z } from 'zod';
 import { redirect } from 'next/navigation';
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -24,9 +24,9 @@ import {
 } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
-import { createProjectAction } from '@/actions/create-project';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { ProjectContext } from '@/context/ProjectContext';
 
 const formSchema = z.object({
   projectName: z.string().min(1, 'Project name is required.'),
@@ -40,6 +40,7 @@ export function NewProjectForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const { addProject } = useContext(ProjectContext);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -52,21 +53,24 @@ export function NewProjectForm() {
 
   async function onSubmit(values: FormValues) {
     setIsLoading(true);
-    const result = await createProjectAction(values);
-    if (result?.error) {
-      toast({
-        variant: "destructive",
-        title: "Error Creating Project",
-        description: result.error,
-      });
-      setIsLoading(false);
-    } else {
-        toast({
-            title: "Project Created",
-            description: "Your new project has been successfully created.",
-        });
-        // The action handles the redirect on success
-    }
+    
+    addProject({
+      id: `PROJ-${Date.now()}`,
+      name: values.projectName,
+      lead: values.projectLead,
+      // Default values for new projects
+      status: 'Not Started',
+      progress: 0,
+      team: [], 
+    });
+
+    toast({
+        title: "Project Created",
+        description: "Your new project has been successfully created.",
+    });
+
+    setIsLoading(false);
+    router.push('/projects');
   }
 
   return (

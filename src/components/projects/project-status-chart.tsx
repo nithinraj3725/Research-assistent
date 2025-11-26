@@ -1,5 +1,6 @@
 "use client"
 
+import React, { useContext, useMemo } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import {
   Card,
@@ -14,7 +15,7 @@ import {
   ChartTooltipContent,
   ChartConfig,
 } from "@/components/ui/chart"
-import { projectStatusData } from "@/lib/placeholder-data"
+import { ProjectContext } from '@/context/ProjectContext';
 
 const chartConfig = {
   count: {
@@ -39,6 +40,16 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function ProjectStatusChart() {
+  const { projects } = useContext(ProjectContext);
+
+  const projectStatusData = useMemo(() => [
+    { status: 'In Progress', count: projects.filter(p => p.status === 'In Progress').length, fill: "var(--color-inProgress)" },
+    { status: 'Completed', count: projects.filter(p => p.status === 'Completed').length, fill: "var(--color-completed)" },
+    { status: 'On Hold', count: projects.filter(p => p.status === 'On Hold').length, fill: "var(--color-onHold)" },
+    { status: 'Not Started', count: projects.filter(p => p.status === 'Not Started').length, fill: "var(--color-notStarted)" },
+  ], [projects]);
+
+
   return (
     <Card>
       <CardHeader>
