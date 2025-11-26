@@ -1,3 +1,5 @@
+// This file is no longer used and can be deleted. 
+// The new component is `research-paper-finder.tsx`.
 "use client";
 
 import { useState } from 'react';

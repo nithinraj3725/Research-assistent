@@ -1,3 +1,5 @@
+// This file is no longer used. The functionality has been split into
+// search-papers.ts and summarize-paper.ts
 "use server";
 
 import { getResearchRecommendations, type GetResearchRecommendationsInput, type GetResearchRecommendationsOutput } from "@/ai/flows/get-research-recommendations";

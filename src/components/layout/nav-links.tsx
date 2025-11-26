@@ -2,13 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FolderKanban, FileText, Lightbulb } from 'lucide-react';
+import { FolderKanban, FileText, Search } from 'lucide-react';
 import { SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 
 const links = [
   { href: '/projects', icon: FolderKanban, label: 'My Projects' },
   { href: '/report-generator', icon: FileText, label: 'Report Generator' },
-  { href: '/research-ahead', icon: Lightbulb, label: 'Research Ahead' },
+  { href: '/research-ahead', icon: Search, label: 'Paper Analyzer' },
 ];
 
 export function NavLinks() {
