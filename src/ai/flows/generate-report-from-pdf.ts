@@ -17,12 +17,11 @@ const GenerateReportFromPdfInputSchema = z.object({
     .describe(
       "A PDF document of a research paper, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:application/pdf;base64,<encoded_data>'."
     ),
-  reportType: z.string().describe('The type of report to generate (e.g., Executive Summary, Literature Review, Technical Analysis).'),
 });
 export type GenerateReportFromPdfInput = z.infer<typeof GenerateReportFromPdfInputSchema>;
 
 const GenerateReportFromPdfOutputSchema = z.object({
-  reportContent: z.string().describe('The generated report content based on the PDF and report type.'),
+  reportContent: z.string().describe('The generated report content based on the PDF.'),
 });
 export type GenerateReportFromPdfOutput = z.infer<typeof GenerateReportFromPdfOutputSchema>;
 
@@ -34,11 +33,13 @@ const prompt = ai.definePrompt({
   name: 'generateReportFromPdfPrompt',
   input: {schema: GenerateReportFromPdfInputSchema},
   output: {schema: GenerateReportFromPdfOutputSchema},
-  prompt: `You are an AI research assistant. Your task is to analyze the provided research paper (PDF) and generate a specific type of report based on its content.
+  prompt: `You are an AI research assistant. Your task is to analyze the provided research paper (PDF).
 
-  Report Type Requested: {{{reportType}}}
-
-  Analyze the document and generate a comprehensive and well-structured "{{{reportType}}}".
+  First, locate and carefully read the **Conclusion** section of the uploaded research paper.
+  
+  Within that conclusion, identify any ideas, suggestions, or unanswered questions the author proposes for **future research**.
+  
+  Then, generate a report that **expands on those specific ideas**. This report should explore the potential of those research paths, suggest possible methodologies, and outline the next steps a researcher could take.
 
   PDF Document: {{media url=pdfDataUri}}
   `,

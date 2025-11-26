@@ -20,7 +20,6 @@ import { Loader2, Wand2 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
-  reportType: z.string().min(1, "Report type is required."),
   pdfFile: z
     .any()
     .refine(files => files?.length > 0, "A PDF file is required.")
@@ -45,9 +44,7 @@ export function ReportGeneratorForm() {
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-        reportType: 'Executive Summary',
-    },
+    defaultValues: {},
   });
   
   const fileRef = form.register("pdfFile");
@@ -61,7 +58,6 @@ export function ReportGeneratorForm() {
         const pdfDataUri = await fileToDataUri(pdfFile);
 
         const result = await generateReportFromPdfAction({
-            reportType: values.reportType,
             pdfDataUri: pdfDataUri
         });
 
@@ -90,9 +86,9 @@ export function ReportGeneratorForm() {
     <div className="grid lg:grid-cols-2 gap-6 items-start">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline">Report Details</CardTitle>
+          <CardTitle className="font-headline">Future Research Report</CardTitle>
           <CardDescription>
-            Upload a PDF and specify the type of report to generate.
+            Upload a research paper to generate a report on its future work suggestions.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -111,22 +107,9 @@ export function ReportGeneratorForm() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="reportType"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Report Type</FormLabel>
-                        <FormControl>
-                            <Input placeholder="e.g., Executive Summary, Literature Review, Technical Analysis" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )}
-              />
               <Button type="submit" disabled={isLoading} className="w-full">
                 {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
-                Generate Report
+                Generate Future Work Report
               </Button>
             </form>
           </Form>
@@ -137,7 +120,7 @@ export function ReportGeneratorForm() {
         <CardHeader>
           <CardTitle className="font-headline">Generated Report</CardTitle>
           <CardDescription>
-            The AI-generated report will appear here.
+            The AI-generated report on future research directions will appear here.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex-grow min-h-[400px]">

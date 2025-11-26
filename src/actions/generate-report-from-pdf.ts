@@ -4,7 +4,6 @@ import { generateReportFromPdf, type GenerateReportFromPdfInput } from "@/ai/flo
 import { z } from "zod";
 
 const formSchema = z.object({
-  reportType: z.string().min(1, "Report type is required."),
   pdfDataUri: z.string().min(1, "PDF file is required."),
 });
 
